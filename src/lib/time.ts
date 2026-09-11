@@ -1,5 +1,13 @@
 export const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
+// Native HTML video exposes timeline time, not decoded-frame access. This is
+// a practical 30 fps source-time step and stays independent of playback rate.
+export const FRAME_STEP_SECONDS = 1 / 30;
+
+export function stepFrame(currentTime: number, direction: -1 | 1, duration: number) {
+  return clamp(currentTime + direction * FRAME_STEP_SECONDS, 0, Number.isFinite(duration) ? duration : currentTime);
+}
+
 export function formatTime(milliseconds: number, withMillis = false) {
   const safe = Math.max(0, Math.round(milliseconds));
   const hours = Math.floor(safe / 3_600_000);

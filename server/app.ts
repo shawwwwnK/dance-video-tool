@@ -212,7 +212,7 @@ export function createApp(db = createDatabase()) {
   });
   app.post("/api/videos/:id/bookmarks", (req, res) => {
     const id = assertId(req.params.id); const video = getVideo(db, id); const input = validateBookmark(req.body, video.duration_ms); const timestamp = now(); const bookmark: BookmarkRow = { id: crypto.randomUUID(), video_id: id, timestamp_ms: input.timestampMs, title: input.title, description: input.description, created_at: timestamp, updated_at: timestamp };
-    db.prepare("INSERT INTO bookmarks(id,video_id,timestamp_ms,title,description,created_at,updated_at) VALUES(@id,@video_id,@timestampMs,@title,@description,@created_at,@updated_at)").run(bookmark);
+    db.prepare("INSERT INTO bookmarks(id,video_id,timestamp_ms,title,description,created_at,updated_at) VALUES(?,?,?,?,?,?,?)").run(bookmark.id, bookmark.video_id, bookmark.timestamp_ms, bookmark.title, bookmark.description, bookmark.created_at, bookmark.updated_at);
     res.status(201).json({ bookmark: bookmarkDto(bookmark) });
   });
   app.patch("/api/bookmarks/:id", (req, res) => {

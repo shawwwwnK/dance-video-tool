@@ -8,8 +8,14 @@ type Props = { bookmarks: Bookmark[]; draft: Draft | null; durationMs: number; o
 export function Bookmarks({ bookmarks, draft, durationMs, onCancelDraft, onSaveDraft, onJump, onUpdate, onDelete }: Props) {
   const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
+  const [fullscreen, setFullscreen] = useState(() => Boolean(document.fullscreenElement));
   const titleRef = useRef<HTMLInputElement>(null);
-  useEffect(() => { if (draft) titleRef.current?.focus(); }, [draft]);
+  useEffect(() => {
+    const updateFullscreen = () => setFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", updateFullscreen);
+    return () => document.removeEventListener("fullscreenchange", updateFullscreen);
+  }, []);
+  useEffect(() => { if (draft && !fullscreen && !document.fullscreenElement) titleRef.current?.focus(); }, [draft, fullscreen]);
   const filtered = bookmarks.filter((b) => `${b.title} ${b.description}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
   return <aside className="bookmarks" aria-label="Bookmarks">
     <div className="panel-title"><div><h2>Bookmarks</h2><span>{bookmarks.length} saved</span></div></div>
