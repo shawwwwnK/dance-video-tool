@@ -98,7 +98,13 @@ export function Player({ video, bookmarks, draft, seekStep, onCancelDraft, onSav
         </div>
       </div>}
     </div>
-    <p className="shortcuts"><kbd>Space</kbd> play/pause <kbd>←</kbd><kbd>→</kbd> seek <kbd>&lt;</kbd><kbd>&gt;</kbd> frame <kbd>N</kbd><kbd>M</kbd> 1s <kbd>B</kbd> bookmark</p>
+    <p className="shortcuts" aria-label="Keyboard shortcuts" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "7px 16px" }}>
+      <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", whiteSpace: "nowrap" }}><kbd>Space</kbd><span>Play / pause</span></span>
+      <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", whiteSpace: "nowrap" }}><kbd>←</kbd><kbd>→</kbd><span>Seek</span></span>
+      <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", whiteSpace: "nowrap" }}><kbd>&lt;</kbd><kbd>&gt;</kbd><span>Frame</span></span>
+      <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", whiteSpace: "nowrap" }}><kbd>N</kbd><kbd>M</kbd><span>{seekStep} {seekStep === 1 ? "second" : "seconds"}</span></span>
+      <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", whiteSpace: "nowrap" }}><kbd>B</kbd><span>Bookmark</span></span>
+    </p>
   </section>;
 }
 
