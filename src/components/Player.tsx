@@ -65,6 +65,12 @@ export function Player({ video, bookmarks, draft, seekStep, onCancelDraft, onSav
   const stepByFrame = (direction: -1 | 1) => { const element = media.current; if (!element || !ready) return; element.pause(); element.currentTime = stepFrame(element.currentTime, direction, element.duration); setTime(element.currentTime * 1000); persist(); };
   const setSpeed = (input: number) => { const next = clamp(Number.isFinite(input) ? input : 1, .25, 1.5); if (media.current) media.current.playbackRate = next; setRate(next); persist({ playbackRate: next }); };
   const toggleMirror = () => { const next = !mirrored; setMirrored(next); persist({ mirrored: next }); };
+  const toggleFullscreen = async () => {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await player.current?.requestFullscreen?.();
+    } catch { setError("Fullscreen could not be changed by this browser."); }
+  };
   const jumpToBookmark = (bookmark: Bookmark) => { const element = media.current; if (!element) return; element.currentTime = bookmark.timestampMs / 1000; setTime(bookmark.timestampMs); persist(); };
   const createBookmark = () => { const element = media.current; if (!element) return; const timestampMs = Math.round(element.currentTime * 1000); element.pause(); onCreateBookmark(timestampMs); };
   const missing = video?.missing;
@@ -88,7 +94,7 @@ export function Player({ video, bookmarks, draft, seekStep, onCancelDraft, onSav
           <label className="speed-control">Speed<input aria-label="Playback speed" type="number" min=".25" max="1.5" step=".01" value={rate.toFixed(2)} disabled={!ready} onChange={(event) => setSpeed(Number(event.target.value))} /><span>×</span></label>
           <input className="volume" aria-label="Volume" type="range" min="0" max="1" step=".01" value={muted ? 0 : volume} onChange={(event) => { const next = Number(event.target.value); if (media.current) { media.current.volume = next; media.current.muted = next === 0; } setVolume(next); setMuted(next === 0); }} />
           <button aria-label="Mute" disabled={!ready} onClick={() => { const next = !muted; if (media.current) media.current.muted = next; setMuted(next); }}>{muted ? "Unmute" : "Mute"}</button>
-          <button aria-label="Fullscreen" disabled={!ready} onClick={() => player.current?.requestFullscreen?.()}>⛶</button>
+          <button aria-label={fullscreen ? "Exit fullscreen" : "Enter fullscreen"} disabled={!ready} onClick={() => void toggleFullscreen()}>⛶</button>
         </div>
       </div>}
     </div>
