@@ -4,6 +4,10 @@ LindyLoop is a local-first dance-video practice app for macOS. It imports copies
 of local video files into an app-managed library and lets one operator study,
 seek, mirror, and annotate a video with timestamp bookmarks.
 
+## Interface preview
+
+![LindyLoop showing a dance video, player controls, library, and timestamp bookmarks](docs/assets/lindyloop-practice-screen.png)
+
 ## Requirements
 
 - Node.js 24 LTS (see `.nvmrc`)
